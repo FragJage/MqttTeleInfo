@@ -33,13 +33,13 @@ void MqttTeleInfo::DaemonConfigure(SimpleIni& iniFile)
 	m_RefreshInstantValuesInterval = ivalue;
 }
 
-bool MqttTeleInfo::RefreshValues(const string& key, map<string, string> trame, bool withPTEC)
+bool MqttTeleInfo::RefreshValues(const string& key, map<string, string> trame, bool withPTEC, bool forceRefresh)
 {
     map<string, string>::iterator itnew = trame.find(key);
     map<string, string>::iterator itold = m_OldTrame.find(key);
 
     if(itnew == trame.end()) return false;
-    if( (itold != m_OldTrame.end()) && (itold->second==itnew->second) ) return false;
+    if((!forceRefresh) && (itold != m_OldTrame.end()) && (itold->second==itnew->second) ) return false;
 
     m_OldTrame[key] = trame[key];
 
@@ -77,14 +77,20 @@ void MqttTeleInfo::Refresh(bool forceRefresh)
 	if((forceRefresh)||(timeNow-lastRefreshIndexes>=m_RefreshIndexesInterval))
     {
         lastRefreshIndexes=timeNow;
-        LOG_VERBOSE(m_Log) << "Refresh indexes needed";
+        if(forceRefresh)
+            LOG_VERBOSE(m_Log) << "Refresh indexes forced";
+        else
+            LOG_VERBOSE(m_Log) << "Refresh indexes needed";
 		refreshIndexes = true;
     }
 
 	if((forceRefresh)||(timeNow-lastRefreshInstantValues>=m_RefreshInstantValuesInterval))
     {
         lastRefreshInstantValues=timeNow;
-        LOG_VERBOSE(m_Log) << "Refresh instantaneous values needed";
+        if(forceRefresh)
+            LOG_VERBOSE(m_Log) << "Refresh instantaneous values forced";
+        else
+            LOG_VERBOSE(m_Log) << "Refresh instantaneous values needed";
         refreshInstantValues = true;
     }
 
@@ -95,18 +101,18 @@ void MqttTeleInfo::Refresh(bool forceRefresh)
 
     if(refreshIndexes)
     {
-        if(RefreshValues("BASE", trame, false)) newvalue = true;
-        if(RefreshValues("HCHC", trame, false)) newvalue = true;
-        if(RefreshValues("HCHP", trame, false)) newvalue = true;
-        if(RefreshValues("EJPHN", trame, false)) newvalue = true;
-        if(RefreshValues("EJPHPM", trame, false)) newvalue = true;
+        if(RefreshValues("BASE",   trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("HCHC",   trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("HCHP",   trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("EJPHN",  trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("EJPHPM", trame, false, forceRefresh)) newvalue = true;
     }
 
     if(refreshInstantValues)
     {
-        if(RefreshValues("PTEC", trame, false)) newvalue = true;
-        if(RefreshValues("IINST", trame, true)) newvalue = true;
-        if(RefreshValues("PAPP", trame, true)) newvalue = true;
+        if(RefreshValues("PTEC",  trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("IINST", trame, true,  forceRefresh)) newvalue = true;
+        if(RefreshValues("PAPP",  trame, true,  forceRefresh)) newvalue = true;
     }
 
     if(newvalue) m_MqttQueueCond.notify_one();
@@ -144,6 +150,7 @@ int MqttTeleInfo::DaemonLoop(int argc, char* argv[])
 	Subscribe(GetMainTopic() + "command/#");
 	LOG_VERBOSE(m_Log) << "Subscript to : " << GetMainTopic() + "command/#";
 
+	Refresh(true);
 	bool bStop = false;
 	bool bPause = false;
 	while (!bStop)

@@ -26,7 +26,7 @@ class MqttTeleInfo : public MqttDaemon
 		void DaemonConfigure(SimpleIni& iniFile);
 		void SendMqttMessages();
 		void Refresh(bool forceRefresh);
-		bool RefreshValues(const std::string& key, std::map<std::string, std::string> trame, bool withPTEC);
+		bool RefreshValues(const std::string& key, std::map<std::string, std::string> trame, bool withPTEC, bool forceRefresh);
 
 		std::mutex m_MqttQueueAccess;
 		ServiceConditionVariable m_MqttQueueCond;
