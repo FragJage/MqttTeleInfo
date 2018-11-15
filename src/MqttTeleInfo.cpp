@@ -102,8 +102,9 @@ void MqttTeleInfo::Refresh(bool forceRefresh)
         if(RefreshValues("EJPHPM", trame, false)) newvalue = true;
     }
 
-    if(refreshIndexes)
+    if(refreshInstantValues)
     {
+        if(RefreshValues("PTEC", trame, false)) newvalue = true;
         if(RefreshValues("IINST", trame, true)) newvalue = true;
         if(RefreshValues("PAPP", trame, true)) newvalue = true;
     }

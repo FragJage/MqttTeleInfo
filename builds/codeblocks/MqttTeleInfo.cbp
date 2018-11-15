@@ -55,12 +55,6 @@
 			<Add library="paho-mqttpp3" />
 			<Add directory="/usr/lib/x86_64-linux-gnu" />
 		</Linker>
-		<Unit filename="../../dependencies/FragFramework/src/Plateforms.cpp" />
-		<Unit filename="../../dependencies/FragFramework/src/Plateforms.h" />
-		<Unit filename="../../dependencies/FragFramework/src/SafeFunctions.cpp" />
-		<Unit filename="../../dependencies/FragFramework/src/SafeFunctions.h" />
-		<Unit filename="../../dependencies/FragFramework/src/StringTools.cpp" />
-		<Unit filename="../../dependencies/FragFramework/src/StringTools.h" />
 		<Unit filename="../../dependencies/MqttDaemon/src/MqttBase.cpp" />
 		<Unit filename="../../dependencies/MqttDaemon/src/MqttBase.h" />
 		<Unit filename="../../dependencies/MqttDaemon/src/MqttClient.cpp" />
