@@ -33,6 +33,17 @@ void MqttTeleInfo::DaemonConfigure(SimpleIni& iniFile)
 	m_RefreshInstantValuesInterval = ivalue;
 }
 
+string MqttTeleInfo::GetPTEC(const map<string, string>& trame)
+{
+    map<string, string>::const_iterator it = trame.find("PTEC");
+    if(it == trame.end()) return "";
+
+    string ptec = it->second;
+    if(ptec.at(2)=='.') ptec = ptec.substr(0,2);
+
+    return ptec;
+}
+
 bool MqttTeleInfo::RefreshValues(const string& key, map<string, string> trame, bool withPTEC, bool forceRefresh)
 {
     map<string, string>::iterator itnew = trame.find(key);
@@ -40,6 +51,14 @@ bool MqttTeleInfo::RefreshValues(const string& key, map<string, string> trame, b
 
     if(itnew == trame.end()) return false;
     if((!forceRefresh) && (itold != m_OldTrame.end()) && (itold->second==itnew->second) ) return false;
+
+    if((key=="PTEC") && (itold != m_OldTrame.end()) && (m_OldTrame[key] != trame[key]))
+    {
+        string ptec = GetPTEC(m_OldTrame);
+        m_MqttQueue.emplace("IINST-"+ptec, "0");
+        m_MqttQueue.emplace("PAPP-"+ptec, "0");
+        LOG_VERBOSE(m_Log) << "Reset value for IINST-" << ptec << " and PAPP-" << ptec;
+    }
 
     m_OldTrame[key] = trame[key];
 
@@ -52,7 +71,7 @@ bool MqttTeleInfo::RefreshValues(const string& key, map<string, string> trame, b
     lock_guard<mutex> lock(m_MqttQueueAccess);
     if(withPTEC)
     {
-        string key2 = key+"-"+trame["PTEC"].substr(0,2);
+        string key2 = key+"-"+GetPTEC(trame);
         m_MqttQueue.emplace(key2, trame[key]);
         LOG_VERBOSE(m_Log) << "New value for " << key2 << " : " << trame[key];
     }

@@ -23,6 +23,7 @@ class MqttTeleInfo : public MqttDaemon
 		void on_message(const std::string& topic, const std::string& message);
 
     private:
+        std::string GetPTEC(const std::map<std::string, std::string>& trame);
 		void DaemonConfigure(SimpleIni& iniFile);
 		void SendMqttMessages();
 		void Refresh(bool forceRefresh);

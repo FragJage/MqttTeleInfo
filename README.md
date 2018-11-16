@@ -4,7 +4,7 @@ Mqtt daemon to transmit tele information.
 
 Introduction
 ============
-This daemon send Mqtt message of electric counter values. 
+This daemon send Mqtt message from french electric counter values. It's design for base, HC/HP, EJP and Tempo subsription.
 
 Features
 ========
