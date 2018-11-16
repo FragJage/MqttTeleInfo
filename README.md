@@ -9,8 +9,8 @@ This daemon send Mqtt message of electric counter values.
 Features
 ========
  - Send instantaneous intensity and apparent power.
- - Send index counter BASE, HC/HP and EJPHN/EJPHPM.
- - Send PTEC value.
+ - Send index counter BASE, HC/HP, EJP and Tempo.
+ - Send PTEC value, tomorrow tempo and EJP notification.
 
 Licence
 =======

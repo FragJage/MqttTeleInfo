@@ -106,11 +106,19 @@ void MqttTeleInfo::Refresh(bool forceRefresh)
         if(RefreshValues("HCHP",   trame, false, forceRefresh)) newvalue = true;
         if(RefreshValues("EJPHN",  trame, false, forceRefresh)) newvalue = true;
         if(RefreshValues("EJPHPM", trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("BBRHCJB", trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("BBRHPJB", trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("BBRHCJW", trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("BBRHPJW", trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("BBRHCJR", trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("BBRHPJR", trame, false, forceRefresh)) newvalue = true;
     }
 
     if(refreshInstantValues)
     {
         if(RefreshValues("PTEC",  trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("PEJP",  trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("DEMAIN",trame, false, forceRefresh)) newvalue = true;
         if(RefreshValues("IINST", trame, true,  forceRefresh)) newvalue = true;
         if(RefreshValues("PAPP",  trame, true,  forceRefresh)) newvalue = true;
     }
