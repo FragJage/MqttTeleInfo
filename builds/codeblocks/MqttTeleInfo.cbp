@@ -55,6 +55,8 @@
 			<Add library="paho-mqttpp3" />
 			<Add directory="/usr/lib/x86_64-linux-gnu" />
 		</Linker>
+		<Unit filename="../../dependencies/FragFramework/src/StringTools.cpp" />
+		<Unit filename="../../dependencies/FragFramework/src/StringTools.h" />
 		<Unit filename="../../dependencies/MqttDaemon/src/MqttBase.cpp" />
 		<Unit filename="../../dependencies/MqttDaemon/src/MqttBase.h" />
 		<Unit filename="../../dependencies/MqttDaemon/src/MqttClient.cpp" />
@@ -76,10 +78,6 @@
 		<Unit filename="../../src/TeleInfo.h" />
 		<Unit filename="../../src/main.cpp" />
 		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
-			<lib_finder disable_auto="1" />
 			<DoxyBlocks>
 				<comment_style block="2" line="2" />
 				<doxyfile_project />
@@ -89,6 +87,7 @@
 				<doxyfile_dot />
 				<general />
 			</DoxyBlocks>
+			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
