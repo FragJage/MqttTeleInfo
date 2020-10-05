@@ -9,9 +9,9 @@ Mqtt daemon to transmit tele information.
 This daemon send Mqtt message from french electric counter values. It's design for base, HC/HP, EJP and Tempo subsription.
 
 ## Features
-* Send instantaneous intensity and apparent power.
-* Send index counter BASE, HC/HP, EJP and Tempo.
-* Send PTEC value, tomorrow tempo and EJP notification.
+*   Send instantaneous intensity and apparent power.
+*   Send index counter BASE, HC/HP, EJP and Tempo.
+*   Send PTEC value, tomorrow tempo and EJP notification.
 
 ## Licence
 MqttTeleInfo is free software : you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
