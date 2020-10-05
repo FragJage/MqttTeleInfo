@@ -5,9 +5,8 @@
 
 using namespace std;
 
-SerialTeleInfo::SerialTeleInfo()
+SerialTeleInfo::SerialTeleInfo() : m_serialPort("/dev/ttyAMA0")
 {
-    m_serialPort = "/dev/ttyAMA0";
 }
 
 SerialTeleInfo::~SerialTeleInfo()
