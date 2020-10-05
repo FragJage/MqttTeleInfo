@@ -1,30 +1,25 @@
 #include <stdio.h>   /* Standard input/output definitions */
-//#include <string.h>  /* String function definitions */
 #include <unistd.h>  /* UNIX standard function definitions */
 #include <fcntl.h>   /* File control definitions */
-//#include <errno.h>   /* Error number definitions */
-//#include <termios.h> /* POSIX terminal control definitions */
-#include "TeleInfo.h"
-
+#include "SerialTeleInfo.h"
 
 using namespace std;
 
-
-TeleInfo::TeleInfo()
+SerialTeleInfo::SerialTeleInfo()
 {
     m_serialPort = "/dev/ttyAMA0";
 }
 
-TeleInfo::~TeleInfo()
+SerialTeleInfo::~SerialTeleInfo()
 {
 }
 
-void TeleInfo::SetSerialPort(const string& serialPort)
+void SerialTeleInfo::SetSerialPort(const string& serialPort)
 {
     m_serialPort = serialPort;
 }
 
-map<string, string> TeleInfo::GetTrame()
+map<string, string> SerialTeleInfo::GetTrame()
 {
     map<string, string> trame;
 
@@ -38,7 +33,7 @@ map<string, string> TeleInfo::GetTrame()
     return trame;
 }
 
-map<string, string> TeleInfo::ReadTrame(int fd)
+map<string, string> SerialTeleInfo::ReadTrame(int fd)
 {
     map<string, string> trame;
     char readedChar;

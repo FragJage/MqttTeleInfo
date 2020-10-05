@@ -6,12 +6,11 @@
 #include "MqttTeleInfo.h"
 #include "SimpleFolders.h"
 
-
 using namespace std;
 
-
-MqttTeleInfo::MqttTeleInfo() : MqttDaemon("teleinfo", "MqttTeleInfo"), m_RefreshIndexesInterval(120), m_RefreshInstantValuesInterval(30)
+MqttTeleInfo::MqttTeleInfo(ISerialCommunicator* serialCommunicator) : MqttDaemon("teleinfo", "MqttTeleInfo"), m_RefreshIndexesInterval(120), m_RefreshInstantValuesInterval(30), m_SerialCommunicator(serialCommunicator)
 {
+    if(m_SerialCommunicator==nullptr) m_SerialCommunicator = &m_SerialTeleInfo;
 }
 
 MqttTeleInfo::~MqttTeleInfo()
@@ -24,7 +23,7 @@ void MqttTeleInfo::DaemonConfigure(SimpleIni& iniFile)
 	string svalue;
 
 	svalue = iniFile.GetValue("teleinfo", "SerialPort", "/dev/ttyAMA0");
-	m_TeleInfo.SetSerialPort(svalue);
+	m_SerialCommunicator->SetSerialPort(svalue);
 
 	ivalue = iniFile.GetValue("teleinfo", "RefreshIndexesInterval", 120);
 	m_RefreshIndexesInterval = ivalue;
@@ -116,15 +115,15 @@ void MqttTeleInfo::Refresh(bool forceRefresh)
     if((!refreshIndexes)&&(!refreshInstantValues)) return;
 
     bool newvalue = false;
-    map<string, string> trame = m_TeleInfo.GetTrame();
+    map<string, string> trame = m_SerialCommunicator->GetTrame();
 
     if(refreshIndexes)
     {
-        if(RefreshValues("BASE",   trame, false, forceRefresh)) newvalue = true;
-        if(RefreshValues("HCHC",   trame, false, forceRefresh)) newvalue = true;
-        if(RefreshValues("HCHP",   trame, false, forceRefresh)) newvalue = true;
-        if(RefreshValues("EJPHN",  trame, false, forceRefresh)) newvalue = true;
-        if(RefreshValues("EJPHPM", trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("BASE",    trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("HCHC",    trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("HCHP",    trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("EJPHN",   trame, false, forceRefresh)) newvalue = true;
+        if(RefreshValues("EJPHPM",  trame, false, forceRefresh)) newvalue = true;
         if(RefreshValues("BBRHCJB", trame, false, forceRefresh)) newvalue = true;
         if(RefreshValues("BBRHPJB", trame, false, forceRefresh)) newvalue = true;
         if(RefreshValues("BBRHCJW", trame, false, forceRefresh)) newvalue = true;

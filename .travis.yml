@@ -1,0 +1,45 @@
+language: cpp
+dist: xenial
+compiler: gcc
+env:
+  global:
+    - COMPILER=g++
+
+sudo: required
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - valgrind
+      - mosquitto
+    
+before_install:
+  - pushd ..
+  - git clone https://github.com/eclipse/paho.mqtt.c.git
+  - cd paho.mqtt.c
+  - mkdir build && cd build
+  - cmake -DPAHO_WITH_SSL=TRUE -DPAHO_BUILD_DOCUMENTATION=FALSE -DPAHO_BUILD_SAMPLES=FALSE -DPAHO_ENABLE_TESTING=FALSE ..
+  - make && sudo make install
+  - cd ../..
+  - git clone https://github.com/eclipse/paho.mqtt.cpp.git
+  - cd paho.mqtt.cpp
+  - mkdir build && cd build
+  - cmake -DPAHO_WITH_SSL=TRUE -DPAHO_MQTT_C_PATH=../../paho.mqtt.c ..
+  - make && sudo make install
+  - sudo ldconfig
+  - popd
+
+install:
+  - sudo pip install -U "cpp-coveralls"
+
+script:
+  - cmake . -G"Unix Makefiles" -DCMAKE_CXX_COMPILER=$(which $COMPILER)
+  - make
+  - ./test/bin/unittest
+
+after_success:
+  - coveralls --include src --gcov-options '\-lp' --gcov 'gcov'
+  - valgrind --error-exitcode=0 --leak-check=full ./test/bin/unittest
+

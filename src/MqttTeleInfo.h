@@ -4,7 +4,9 @@
 #include <queue>
 #include <map>
 #include "MqttDaemon.h"
-#include "TeleInfo.h"
+#include "ISerialCommunicator.h"
+#include "SerialTeleInfo.h"
+
 
 struct MqttQueue
 {
@@ -16,7 +18,7 @@ struct MqttQueue
 class MqttTeleInfo : public MqttDaemon
 {
     public:
-        MqttTeleInfo();
+        MqttTeleInfo(ISerialCommunicator* serialCommunicator=nullptr);
         ~MqttTeleInfo();
 
 		int DaemonLoop(int argc, char* argv[]);
@@ -32,9 +34,10 @@ class MqttTeleInfo : public MqttDaemon
 		std::mutex m_MqttQueueAccess;
 		ServiceConditionVariable m_MqttQueueCond;
 		std::queue<MqttQueue> m_MqttQueue;
-		TeleInfo m_TeleInfo;
 		int m_RefreshIndexesInterval;
 		int m_RefreshInstantValuesInterval;
+		SerialTeleInfo m_SerialTeleInfo;
+		ISerialCommunicator* m_SerialCommunicator;
 		std::map<std::string, std::string> m_OldTrame;
 };
 

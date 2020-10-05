@@ -2,26 +2,13 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="MqttTeleInfo" />
+		<Option title="MqttTeleInfo-Tests" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Release">
-				<Option output="bin/MqttTeleInfo" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Option parameters="-console" />
-				<Compiler>
-					<Add option="-O2" />
-					<Add option="-std=c++11" />
-				</Compiler>
-				<Linker>
-					<Add option="-s" />
-				</Linker>
-			</Target>
 			<Target title="Debug">
-				<Option output="bin/MqttTeleInfo-Debug" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/MqttTeleInfo-Tests" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../.." />
 				<Option object_output="obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -31,7 +18,11 @@
 					<Add option="-std=c++11" />
 					<Add option="-g" />
 					<Add option="-DDEBUG" />
+					<Add directory="test" />
 				</Compiler>
+				<Linker>
+					<Add library="pthread" />
+				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
@@ -55,8 +46,13 @@
 			<Add library="paho-mqttpp3" />
 			<Add directory="/usr/lib/x86_64-linux-gnu" />
 		</Linker>
+		<Unit filename="../../dependencies/FragFramework/src/Plateforms.cpp" />
+		<Unit filename="../../dependencies/FragFramework/src/Plateforms.h" />
 		<Unit filename="../../dependencies/FragFramework/src/StringTools.cpp" />
 		<Unit filename="../../dependencies/FragFramework/src/StringTools.h" />
+		<Unit filename="../../dependencies/FragFramework/src/UnitTest.cpp" />
+		<Unit filename="../../dependencies/FragFramework/src/UnitTest.h" />
+		<Unit filename="../../dependencies/FragFramework/src/termcolor.h" />
 		<Unit filename="../../dependencies/MqttDaemon/src/MqttBase.cpp" />
 		<Unit filename="../../dependencies/MqttDaemon/src/MqttBase.h" />
 		<Unit filename="../../dependencies/MqttDaemon/src/MqttClient.cpp" />
@@ -77,17 +73,14 @@
 		<Unit filename="../../src/MqttTeleInfo.h" />
 		<Unit filename="../../src/SerialTeleInfo.cpp" />
 		<Unit filename="../../src/SerialTeleInfo.h" />
-		<Unit filename="../../src/main.cpp" />
+		<Unit filename="../../test/MockSerial.cpp" />
+		<Unit filename="../../test/MockSerial.h" />
+		<Unit filename="../../test/TestMqttTeleInfo.cpp" />
+		<Unit filename="../../test/TestMqttTeleInfo.h" />
+		<Unit filename="../../test/TestSerialTeleInfo.cpp" />
+		<Unit filename="../../test/TestSerialTeleInfo.h" />
+		<Unit filename="../../test/main.cpp" />
 		<Extensions>
-			<DoxyBlocks>
-				<comment_style block="2" line="2" />
-				<doxyfile_project />
-				<doxyfile_build />
-				<doxyfile_warnings />
-				<doxyfile_output />
-				<doxyfile_dot />
-				<general />
-			</DoxyBlocks>
 			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>

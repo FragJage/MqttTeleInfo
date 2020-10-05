@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/FragJage/MqttTeleInfo.svg?branch=master)](https://travis-ci.org/FragJage/MqttTeleInfo)
+[![Coverage Status](https://coveralls.io/repos/github/FragJage/MqttTeleInfo/badge.svg?branch=master&bust=9)](https://coveralls.io/github/FragJage/MqttTeleInfo?branch=master)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/25d693e67ad44c52948dfb61e82d9b64)](https://www.codacy.com/gh/FragJage/MqttTeleInfo/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=FragJage/MqttTeleInfo&amp;utm_campaign=Badge_Grade)
+
 MqttTeleInfo
 ============
 Mqtt daemon to transmit tele information. 

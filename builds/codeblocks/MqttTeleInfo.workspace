@@ -2,5 +2,6 @@
 <CodeBlocks_workspace_file>
 	<Workspace title="MqttTeleInfo">
 		<Project filename="MqttTeleInfo.cbp" />
+		<Project filename="MqttTeleInfo-Tests.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
