@@ -70,7 +70,7 @@ bool TestMqttTeleInfo::Start()
 {
 	thread integrationTest(ThreadStart, &mqttTeleInfo);
 	integrationTest.detach();
-	waitMsg(16, 1000);
+	waitMsg(16, 2000);
 
 	cout << "m_Messages.size() = " << m_Messages.size() << endl;
 	assert(m_Messages.size() == 16);
