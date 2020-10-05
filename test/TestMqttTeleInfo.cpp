@@ -48,7 +48,7 @@ void TestMqttTeleInfo::ThreadStart(MqttTeleInfo* pMqttDev)
 
 void TestMqttTeleInfo::on_message(const string& topic, const string& message)
 {
-    //cout << "receive : " << topic << " => " << message << endl;
+    cout << "receive : " << topic << " => " << message << endl;
 	m_Messages[topic] = message;
 }
 
@@ -72,6 +72,7 @@ bool TestMqttTeleInfo::Start()
 	integrationTest.detach();
 	waitMsg(16, 1000);
 
+	cout << "m_Messages.size() = " << m_Messages.size() << endl;
 	assert(m_Messages.size() == 16);
 
 	map<string, string>::iterator it;
