@@ -54,8 +54,8 @@ bool MqttTeleInfo::RefreshValues(const string& key, map<string, string> trame, b
     if((key=="PTEC") && (itold != m_OldTrame.end()) && (m_OldTrame[key] != trame[key]))
     {
         string ptec = GetPTEC(m_OldTrame);
-        m_MqttQueue.emplace("IINST-"+ptec, "0");
-        m_MqttQueue.emplace("PAPP-"+ptec, "0");
+        PublishAsyncAdd("IINST-"+ptec, "0");
+        PublishAsyncAdd("PAPP-"+ptec, "0");
         LOG_VERBOSE(m_Log) << "Reset value for IINST-" << ptec << " and PAPP-" << ptec;
     }
 
@@ -67,16 +67,15 @@ bool MqttTeleInfo::RefreshValues(const string& key, map<string, string> trame, b
         if(itPTEC == trame.end()) withPTEC = false;
     }
 
-    lock_guard<mutex> lock(m_MqttQueueAccess);
     if(withPTEC)
     {
         string key2 = key+"-"+GetPTEC(trame);
-        m_MqttQueue.emplace(key2, trame[key]);
+        PublishAsyncAdd(key2, trame[key]);
         LOG_VERBOSE(m_Log) << "New value for " << key2 << " : " << trame[key];
     }
     else
     {
-        m_MqttQueue.emplace(key, trame[key]);
+        PublishAsyncAdd(key, trame[key]);
         LOG_VERBOSE(m_Log) << "New value for " << key << " : " << trame[key];
     }
 
@@ -141,10 +140,10 @@ void MqttTeleInfo::Refresh(bool forceRefresh)
         if(RefreshValues("PAPP",  trame, true,  forceRefresh)) newvalue = true;
     }
 
-    if(newvalue) m_MqttQueueCond.notify_one();
+    if(newvalue) PublishAsyncStart();
 }
 
-void MqttTeleInfo::on_message(const string& topic, const string& message)
+void MqttTeleInfo::IncomingMessage(const string& topic, const string& message)
 {
 	LOG_VERBOSE(m_Log) << "Mqtt receive " << topic << " : " << message;
 
@@ -177,46 +176,18 @@ int MqttTeleInfo::DaemonLoop(int argc, char* argv[])
 	LOG_VERBOSE(m_Log) << "Subscript to : " << GetMainTopic() + "command/#";
 
 	Refresh(true);
+
 	bool bStop = false;
-	bool bPause = false;
-	while (!bStop)
-	{
-		int cond = Service::Get()->WaitFor({ m_MqttQueueCond }, 200);
-		if (cond == Service::STATUS_CHANGED)
-		{
-			switch (Service::Get()->GetStatus())
-			{
-			case Service::StatusKind::PAUSE:
-				bPause = true;
-				break;
-			case Service::StatusKind::START:
-				bPause = false;
-				cond = 1;
-				break;
-			case Service::StatusKind::STOP:
-				bStop = true;
-				break;
-			}
-		}
-		if (!bPause)
-		{
-			Refresh(false);
-			SendMqttMessages();
-		}
-	}
+	while(!bStop)
+    {
+        if(WaitFor(250)==Service::STATUS_CHANGED)
+        {
+            if(Service::Get()->GetStatus() == Service::StatusKind::STOP) bStop = true;
+        }
+        thread t(&MqttTeleInfo::Refresh, this, false);
+        t.detach();
+    }
 
 	LOG_EXIT_OK;
     return 0;
-}
-
-void MqttTeleInfo::SendMqttMessages()
-{
-	lock_guard<mutex> lock(m_MqttQueueAccess);
-	while (!m_MqttQueue.empty())
-	{
-		MqttQueue& mqttQueue = m_MqttQueue.front();
-		LOG_VERBOSE(m_Log) << "Send " << mqttQueue.Topic << " : " << mqttQueue.Message;
-		Publish(mqttQueue.Topic, mqttQueue.Message);
-		m_MqttQueue.pop();
-	}
 }
